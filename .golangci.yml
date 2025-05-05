@@ -1,267 +1,48 @@
+version: "2"
+
+formatters:
+  enable:
+    - gci
+    - gofumpt
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(flida.dev/)
+        - prefix(flida.dev/json-decoder/)
+        - blank
+        - dot
+    gofumpt:
+      extra-rules: true
+      module-path: flida.dev/json-decoder
+
 issues:
-  exclude-use-default: false
-  fix: true
+  fix: false
   max-issues-per-linter: 0
   max-same-issues: 0
 
-linters-settings:
-  depguard:
-    rules:
-      internal:
-        allow:
-          # GOROOT.
-          - encoding/json
-          - errors
-          - io
-          - net/http
-          - strings
-      main:
-        deny:
-          # Error.
-          - pkg: github.com/pkg/errors
-            desc: Instead, use "errors"
-
-          # Logging.
-          - pkg: github.com/sirupsen/logrus
-            desc: Instead, use "github.com/rs/zerolog"
-          - pkg: go.uber.org/zap
-            desc: Instead, use "github.com/rs/zerolog"
-          - pkg: log
-            desc: Instead, use "github.com/rs/zerolog"
-
-          # Protocol Buffers.
-          - pkg: github.com/golang/protobuf
-            desc: Instead, use "google.golang.org/protobuf"
-
-          # UUID.
-          - pkg: github.com/gofrs/uuid
-            desc: Instead, use "github.com/google/uuid"
-          - pkg: github.com/satori/go.uuid
-            desc: Instead, use "github.com/google/uuid"
-
-  dupl:
-    threshold: 100
-
-  errcheck:
-    check-blank: true
-    check-type-assertions: true
-    disable-default-exclusions: true
-    exclude-functions:
-      - encoding/json.Marshal
-      - encoding/json.MarshalIndent
-
-  errchkjson:
-    check-error-free-encoding: true
-
-  exhaustive:
-    check:
-      - map
-      - switch
-    check-generated: true
-
-  exhaustruct:
-    exclude:
-      # GOROOT.
-      - 'crypto/tls\.Config'
-      - 'net/http\.Server'
-
-      # Third-party.
-      - 'github\.com/rs/zerolog\.ConsoleWriter'
-
-  forbidigo:
-    analyze-types: true
-    forbid:
-      - ^((==|!=) "")$
-      - ^(fmt\\.Print(|f|ln)|goto|print(|ln))$
-      - ^(http\\.Default(Client|Transport))$
-      - ^(time\\.Sleep)$
-
-  funlen:
-    ignore-comments: true
-    lines: 60
-    statements: 40
-
-  gci:
-    sections:
-      - standard
-      - default
-      - prefix(entrlcom.dev/)
-      - blank
-      - dot
-
-  gocognit:
-    min-complexity: 10
-
-  goconst:
-    ignore-calls: true
-    max: 0
-    min: 0
-    min-len: 2
-    min-occurrences: 2
-
-  gocritic:
-    disabled-checks:
-      - emptyStringTest
-      - ruleguard
-      - sloppyReassign
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      # - security
-      - style
-    settings:
-      captLocal:
-        paramsOnly: true
-      commentedOutCode:
-        minLength: 15
-      elseif:
-        skipBalanced: true
-      hugeParam:
-        sizeThreshold: 256
-      ifElseChain:
-        minThreshold: 2
-      nestingReduce:
-        bodyWidth: 2
-      rangeExprCopy:
-        sizeThreshold: 512
-        skipTestFuncs: false
-      rangeValCopy:
-        sizeThreshold: 128
-        skipTestFuncs: false
-      tooManyResultsChecker:
-        maxResults: 2
-      truncateCmp:
-        skipArchDependent: false
-      underef:
-        skipRecvDeref: false
-      unnamedResult:
-        checkExported: true
-
-  godot:
-    capital: false
-    period: true
-    scope: all
-
-  godox:
-    keywords:
-      - BUG
-      - FIXME
-      - HACK
-      - OPTIMIZE
-      - TODO
-
-  gofumpt:
-    extra-rules: true
-    module-path: entrlcom.dev/http-server
-
-  gosimple:
-    checks:
-      - all
-
-  grouper:
-    import-require-grouping: true
-
-  govet:
-    enable-all: true
-
-  misspell:
-    locale: US
-
-  musttag:
-    functions: [ ]
-
-  nakedret:
-    max-func-lines: 0
-
-  nestif:
-    min-complexity: 3
-
-  nilnil:
-    checked-types:
-      - chan
-      - func
-      - iface
-      - map
-      - ptr
-
-  nolintlint:
-    require-explanation: true
-    require-specific: true
-
-  prealloc:
-    for-loops: true
-
-  rowserrcheck:
-    packages:
-      - github.com/jmoiron/sqlx
-
-  staticcheck:
-    checks:
-      - all
-
-  stylecheck:
-    checks:
-      - all
-      - -ST1000
-      - -ST1003
-
-  tagalign:
-    strict: true
-
-  tagliatelle:
-    case:
-      rules:
-        bson: snake
-        env: upperSnake
-        json: snake
-
-  usestdlibvars:
-    constant-kind: true
-    crypto-hash: true
-    default-rpc-path: true
-    sql-isolation-level: true
-    time-layout: true
-    time-month: true
-    tls-signature-scheme: true
-
-  wsl:
-    allow-assign-and-anything: false
-    allow-assign-and-call: true
-    allow-cuddle-declarations: false
-    allow-cuddle-with-calls:
-      - Lock
-      - RLock
-    allow-cuddle-with-rhs:
-      - RUnlock
-      - Unlock
-    allow-multiline-assign: true
-    allow-separated-leading-comment: false
-    allow-trailing-comment: false
-    error-variable-names:
-      - err
-    force-case-trailing-whitespace: 0
-    force-err-cuddling: false
-    force-short-decl-cuddling: false
-    strict-append: true
-
 linters:
+  default: none
   disable:
+    - dupl
     - dupword
+    - err113
+    - exhaustruct
+    - funlen
     - ginkgolinter
     - gocyclo
-    - gofmt
     - goheader
-    - goimports # gci
     - gomodguard
     - gosmopolitan
     - ireturn
+    - lll
     - loggercheck
     - maintidx
     - nonamedreturns
     - reassign
     - revive # TODO: Set linter.
+    - testpackage
     - varnamelen
     - wrapcheck
   enable:
@@ -269,48 +50,43 @@ linters:
     - asciicheck
     - bidichk
     - bodyclose
+    - canonicalheader
     - containedctx
     - contextcheck
+    - copyloopvar
     - cyclop
     - decorder
     - depguard
     - dogsled
-    - dupl
     - durationcheck
     - errcheck
     - errchkjson
     - errname
     - errorlint
-    - execinquery
     - exhaustive
-    - exhaustruct
-    - exportloopref
+    - fatcontext
+    - forbidigo
     - forcetypeassert
-    - funlen
-    - gci
     - gocheckcompilerdirectives
     - gochecknoglobals
     - gochecknoinits
+    - gochecksumtype
     - gocognit
     - goconst
     - godot
     - godox
-    - goerr113
-    - gofumpt
-    - gomnd
     - gomoddirectives
     - goprintffuncname
     - gosec
-    - gosimple
     - grouper
     - govet
     - importas
     - ineffassign
     - interfacebloat
-    - lll
     - makezero
     - mirror
     - misspell
+    - mnd
     - musttag
     - nakedret
     - nestif
@@ -327,12 +103,9 @@ linters:
     - rowserrcheck
     - sqlclosecheck
     - staticcheck
-    - stylecheck
     - tagalign
     - tagliatelle
-    - tenv
     - testableexamples
-    - testpackage
     - thelper
     - tparallel
     - unconvert
@@ -341,23 +114,343 @@ linters:
     - wastedassign
     - whitespace
     - wsl
-  presets:
-    - bugs
-    - comment
-    - complexity
-    - error
-    - format
-    - import
-    - metalinter
-    - module
-    - performance
-    - sql
-    - style
-    - test
-    - unused
+    - zerologlint
+
+  exclusions:
+    paths:
+      - pkg
+    rules:
+      - path: _test\.go
+        linters:
+          - contextcheck
+
+  settings:
+    copyloopvar:
+      check-alias: true
+
+    depguard:
+      rules:
+        internal:
+          allow:
+            # GOMOD.
+            - flida.dev/json-decoder
+
+            # GOROOT.
+            - $gostd
+
+            # Third-party.
+            - aidanwoods.dev/go-paseto
+            - flida.dev/unit
+            - github.com/BurntSushi/tom
+            - github.com/caarlos0/env/v10
+            - github.com/EventStore/EventStore-Client-Go/v4/esdb
+            - github.com/georgysavva/scany/v2/pgxscan
+            - github.com/google/uuid
+            - github.com/grpc-ecosystem/grpc-gateway/v2
+            - github.com/jackc/pgx/v5
+            - github.com/julienschmidt/httprouter
+            - github.com/Masterminds/squirrel
+            - github.com/nicksnyder/go-i18n/v2/i18n
+            - github.com/redis/rueidis
+            - github.com/rs/zerolog
+            - github.com/urfave/cli/v3
+            - golang.org/x/crypto/argon2
+            - golang.org/x/net/publicsuffix
+            - golang.org/x/sync/errgroup
+            - golang.org/x/text/language
+            - google.golang.org/genproto
+            - google.golang.org/grpc
+            - google.golang.org/protobuf
+          files:
+            - "!$test"
+        main:
+          deny:
+            # Error.
+            - pkg: github.com/pkg/errors
+              desc: Instead, use "errors"
+            - pkg: go.uber.org/multierr
+              desc: Instead, use "errors"
+
+            # Framework.
+            - pkg: github.com/gin-gonic/gin
+              desc: Instead, use ""
+            - pkg: github.com/go-chi/chi
+              desc: Instead, use ""
+            - pkg: github.com/gofiber/fiber
+              desc: Instead, use ""
+            - pkg: github.com/labstack/echo
+              desc: Instead, use ""
+
+            # HTTP Router.
+            - pkg: github.com/valyala/fasthttp
+              desc: Instead, use "github.com/julienschmidt/httprouter"
+
+            # Logging.
+            - pkg: github.com/sirupsen/logrus
+              desc: Instead, use "github.com/rs/zerolog"
+            - pkg: go.uber.org/zap
+              desc: Instead, use "github.com/rs/zerolog"
+            - pkg: log
+              desc: Instead, use "github.com/rs/zerolog"
+
+            # Mock.
+            - pkg: github.com/stretchr/testify/mock
+              desc: Instead, use "github.com/gojuno/minimock/v3"
+            - pkg: github.com/uber-go/mock
+              desc: Instead, use "github.com/gojuno/minimock/v3"
+            - pkg: github.com/vektra/mockery
+              desc: Instead, use "github.com/gojuno/minimock/v3"
+
+            # ORM.
+            - pkg: github.com/go-gorm/gorm
+              desc: Instead, use ""
+
+            # Protocol Buffers.
+            - pkg: github.com/gogo/protobuf
+              desc: Instead, use "google.golang.org/protobuf"
+            - pkg: github.com/golang/protobuf
+              desc: Instead, use "google.golang.org/protobuf"
+
+            # PostgreSQL.
+            - pkg: github.com/lib/pq
+              desc: Instead, use "github.com/jackc/pgx"
+
+            # Redis.
+            - pkg: github.com/allegro/bigcache
+              desc: Instead, use "github.com/redis/rueidis"
+            - pkg: github.com/Code-Hex/go-generics-cache
+              desc: Instead, use "github.com/redis/rueidis"
+            - pkg: github.com/coocood/freecache
+              desc: Instead, use "github.com/redis/rueidis"
+            - pkg: github.com/microup/vcache
+              desc: Instead, use "github.com/redis/rueidis"
+            - pkg: github.com/patrickmn/go-cache
+              desc: Instead, use "github.com/redis/rueidis"
+            - pkg: github.com/redis/go-redis
+              desc: Instead, use "github.com/redis/rueidis"
+
+            # Testing.
+            - pkg: github.com/go-playground/assert
+              desc: Instead, use "github.com/stretchr/testify"
+            - pkg: github.com/onsi/ginkgo
+              desc: Instead, use "github.com/stretchr/testify"
+            - pkg: github.com/onsi/gomega
+              desc: Instead, use "github.com/stretchr/testify"
+
+            # UUID.
+            - pkg: github.com/gofrs/uuid
+              desc: Instead, use "github.com/google/uuid"
+            - pkg: github.com/rogpeppe/fastuuid
+              desc: Instead, use "github.com/google/uuid"
+            - pkg: github.com/satori/go.uuid
+              desc: Instead, use "github.com/google/uuid"
+        test:
+          allow:
+            # GOMOD.
+            - flida.dev/json-decoder
+
+            # GOROOT.
+            - $gostd
+
+            # Third-party.
+            - github.com/gojuno/minimock/v3
+            - github.com/google/uuid
+            - github.com/jackc/pgx/v5
+            - github.com/pashagolub/pgxmock/v4
+            - github.com/stretchr/testify
+            - google.golang.org/grpc
+            - google.golang.org/protobuf
+          files:
+            - "$test"
+
+    errcheck:
+      check-blank: true
+      check-type-assertions: true
+      disable-default-exclusions: true
+      exclude-functions:
+        - (*strings.Builder).WriteString
+        - crypto/rand.Read
+        - encoding/json.Marshal
+        - encoding/json.MarshalIndent
+
+    errchkjson:
+      check-error-free-encoding: true
+
+    exhaustive:
+      check:
+        - map
+        - switch
+
+    forbidigo:
+      analyze-types: true
+      forbid:
+        - pattern: ^((==|!=) "")$
+        - pattern: ^(fmt\\.Print(|f|ln)|goto|print(|ln))$
+        - pattern: ^(http\\.Default(Client|Transport))$
+        - pattern: ^(time\\.Sleep)$
+
+    gochecksumtype:
+      default-signifies-exhaustive: false
+
+    gocognit:
+      min-complexity: 10
+
+    goconst:
+      ignore-calls: true
+      max: 0
+      min: 0
+      min-len: 2
+      min-occurrences: 2
+
+    gocritic:
+      disabled-checks:
+        - emptyStringTest
+        - ruleguard
+        - sloppyReassign
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        # - security
+        - style
+      settings:
+        captLocal:
+          paramsOnly: true
+        commentedOutCode:
+          minLength: 15
+        elseif:
+          skipBalanced: true
+        hugeParam:
+          sizeThreshold: 256
+        ifElseChain:
+          minThreshold: 2
+        nestingReduce:
+          bodyWidth: 2
+        rangeExprCopy:
+          sizeThreshold: 512
+          skipTestFuncs: false
+        rangeValCopy:
+          sizeThreshold: 128
+          skipTestFuncs: false
+        tooManyResultsChecker:
+          maxResults: 2
+        truncateCmp:
+          skipArchDependent: false
+        underef:
+          skipRecvDeref: false
+        unnamedResult:
+          checkExported: true
+
+    godot:
+      capital: false
+      period: true
+      scope: all
+
+    godox:
+      keywords:
+        - BUG
+        - FIXME
+        - HACK
+        - OPTIMIZE
+        - TODO
+
+    grouper:
+      import-require-grouping: true
+
+    govet:
+      disable:
+        - fieldalignment
+      enable-all: true
+
+    misspell:
+      locale: US
+
+    musttag:
+      functions: [ ]
+
+    nakedret:
+      max-func-lines: 0
+
+    nestif:
+      min-complexity: 3
+
+    nilnil:
+      checked-types:
+        - chan
+        - func
+        - iface
+        - map
+        - ptr
+
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+
+    prealloc:
+      for-loops: true
+
+    rowserrcheck:
+      packages:
+        - github.com/jmoiron/sqlx
+
+    staticcheck:
+      checks:
+        - all
+        - -ST1000
+        - -ST1003
+
+    tagalign:
+      strict: true
+
+    tagliatelle:
+      case:
+        rules:
+          bson: snake
+          env: upperSnake
+          json: snake
+
+    usestdlibvars:
+      constant-kind: true
+      crypto-hash: true
+      default-rpc-path: true
+      sql-isolation-level: true
+      time-layout: true
+      time-month: true
+      tls-signature-scheme: true
+
+    wsl:
+      allow-assign-and-anything: false
+      allow-assign-and-call: true
+      allow-cuddle-declarations: false
+      allow-cuddle-with-calls:
+        - Lock
+        - RLock
+      allow-cuddle-with-rhs:
+        - RUnlock
+        - Unlock
+      allow-multiline-assign: true
+      allow-separated-leading-comment: false
+      allow-trailing-comment: false
+      error-variable-names:
+        - err
+      force-case-trailing-whitespace: 0
+      force-err-cuddling: false
+      force-short-decl-cuddling: false
+      strict-append: true
 
 output:
-  sort-results: true
+  formats:
+    text:
+      colors: true
+      path: stderr
+      print-issued-lines: true
+      print-linter-name: true
+  show-stats: true
+  sort-order:
+    - linter
+    - file
 
 run:
+  concurrency: 2
   modules-download-mode: readonly

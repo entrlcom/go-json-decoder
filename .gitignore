@@ -1,12 +1,15 @@
 *
 
 !*.go
+!/.editorconfig
+!/.gitattributes
+!/.github/**
 !/.gitignore
 !/.golangci.yml
-!/go.mod
-!/go.sum
 !/LICENSE
 !/Makefile
 !/README.md
+!/go.mod
+!/go.sum
 
 !*/

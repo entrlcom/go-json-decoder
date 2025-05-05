@@ -1,0 +1,6 @@
+**/mock/** -diff
+*.go text eol=lf
+*.md text eol=lf
+*.swagger.json -diff
+*.yml text eol=lf
+go.sum -diff

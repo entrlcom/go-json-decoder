@@ -1,9 +1,15 @@
-# HTTP request body JSON decoder
+# JSON Decoder
 
 ## Table of Content
 
+- [Authors](#authors)
 - [Examples](#examples)
-- [License](#license)
+
+## Authors
+
+| Name         | GitHub                                             |
+|--------------|----------------------------------------------------|
+| Klim Sidorov | [@entrlcom-klim](https://github.com/entrlcom-klim) |
 
 ## Examples
 
@@ -14,32 +20,27 @@ import (
 	"net/http"
 	"time"
 
-	"entrlcom.dev/http-request-body-json-decoder"
+	"flida.dev/unit"
+
+	"flida.dev/json-decoder"
 )
 
-const maxBytes = 1 << (10 * 1) * 2 // 2 KiB.
+const limit = unit.B * 128 // 128 B.
 
-type Request struct {
+type HTTPRequestBody struct {
 	DateOfBirth time.Time `json:"date_of_birth"`
-	Email       string    `json:"email"`
 	Name        string    `json:"name"`
-	Password    string    `json:"password"`
 }
 
-func Handle(w http.ResponseWriter, r *http.Request) {
-	var request Request
+func ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var body HTTPRequestBody
 
-	// Decode HTTP request body to struct.
-	if err := http_request_body_json_decoder.Decode(w, r, &request, maxBytes); err != nil {
-		// TODO: Handle error.
+	if err := json_decoder.NewHTTPRequestDecoder(limit).Decode(w, r, &body); err != nil {
+		// TODO: ...
 		return
-	}
+    }
 
 	// ...
 }
 
 ```
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)

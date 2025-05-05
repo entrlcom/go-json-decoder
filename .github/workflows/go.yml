@@ -1,0 +1,56 @@
+name: go
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/go
+        with:
+          GO_VERSION: ${{ vars.GO_VERSION }}
+
+      - name: Run Test
+        run: go test -count=1 -covermode=atomic -coverprofile=cover.out.tmp -race ./...
+
+      - name: Run Code Coverage
+        run: |
+          cat cover.out.tmp | grep -v ".minimock.go" > cover.out
+          coverage=$(go tool cover -func cover.out | grep total | awk '{print $3}' | sed 's/%//')
+          if (( $(echo "$coverage < ${{ vars.CODE_COVERAGE_PERCENTAGE }}" | bc -l) )); then
+            echo "Code coverage is below threshold: got $coverage%, want ${{ vars.CODE_COVERAGE_PERCENTAGE }}%"
+            exit 1
+          fi
+
+      - name: Run Flaky Test
+        run: go test -count=100 ./...
+
+  golangci-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/go
+        with:
+          GO_VERSION: ${{ vars.GO_VERSION }}
+
+      - uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.1.2
+
+  govulncheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/go
+        with:
+          GO_VERSION: ${{ vars.GO_VERSION }}
+
+      - uses: golang/govulncheck-action@v1
+        with:
+          go-version-input: ${{ vars.GO_VERSION }}
+          go-package: ./...
