@@ -26,7 +26,7 @@ go-lint: .golangci-lint-install
 
 .PHONY: go-test
 go-test:
-	go test -count=1 -covermode=atomic -coverprofile=cover.out.tmp -race ./internal/...
+	go test -count=1 -covermode=atomic -coverprofile=cover.out.tmp -race ./...
 	cat cover.out.tmp | grep -v ".minimock.go" > cover.out
 	@coverage=$$(go tool cover -func cover.out | grep total | awk '{print substr($$3, 1, length($$3)-1)}'); echo "$$coverage"
 
